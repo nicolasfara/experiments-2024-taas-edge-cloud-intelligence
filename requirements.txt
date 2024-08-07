@@ -1,3 +1,12 @@
-matplotlib ==3.9.1
-xarray ==2024.6.0
+--find-links https://data.pyg.org/whl/torch-2.3.0+cu121.html
 
+numpy==2.0.0
+torch==2.3.0
+pandas==2.2.2
+pyg_lib==0.4.0
+seaborn==0.13.2
+xarray ==2024.6.0
+matplotlib ==3.9.1
+torch-geometric==2.5.3
+torch-scatter==2.1.2+pt23cu121
+torch-sparse==0.6.18+pt23cu121
