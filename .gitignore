@@ -7,3 +7,5 @@ charts/
 data_summary_*
 timeprocessed
 env
+python/dist/
+python/src/RLutils.egg-info/
