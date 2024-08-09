@@ -35,6 +35,7 @@ dependencies {
     implementation(libs.bundles.alchemist)
     implementation(libs.resourceloader)
     implementation(libs.bundles.scalacache)
+    implementation(libs.scalapy)
     if (!GraphicsEnvironment.isHeadless()) {
         implementation("it.unibo.alchemist:alchemist-swingui:${libs.versions.alchemist.get()}")
     }
