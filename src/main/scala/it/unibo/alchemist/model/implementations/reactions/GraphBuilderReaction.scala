@@ -49,7 +49,7 @@ class GraphBuilderReaction[T, P <: Position[P]](
   private def toTorchTensor(data: Tensor): py.Dynamic = data match {
     case v: Vector => torch.Tensor(v.data, dtype = torch.Long)
     case m: Matrix => m.data
-      .map { case (self, neighs) => List(List.fill(neighs.length)(self)) }
+      .map { case (self, neighs) => List(List.fill(neighs.length)(self), neighs) }
       .map { m => torch.Tensor(m, dtype = torch.Long) }
       .takeRight(m.data.length - 1)
       .foldLeft(torch.Tensor(m.data.head, dtype = torch.long))((elem, acc) => torch.cat(List(acc, elem), dim = 1))
