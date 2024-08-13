@@ -6,9 +6,11 @@ import scala.jdk.CollectionConverters.CollectionHasAsScala
 import it.unibo.alchemist.model.molecules.SimpleMolecule
 import it.unibo.alchemist.utils.PythonModules.{rlUtils, torch}
 import it.unibo.alchemist.utils.Molecules
+
 import scala.language.implicitConversions
 import me.shadaj.scalapy.py.SeqConverters
 import me.shadaj.scalapy.py
+import me.shadaj.scalapy.readwrite.{Reader, Writer}
 
 trait Tensor
 case class Vector(data: List[Int]) extends Tensor
@@ -20,8 +22,8 @@ class GraphBuilderReaction[T, P <: Position[P]](
 ) extends AbstractGlobalReaction(environment, distribution) {
 
   private implicit def toMolecule(name: String): SimpleMolecule = new SimpleMolecule(name)
-  private implicit def toPythonList[C <: List[Int]](collection: C): py.Any = collection.toPythonProxy
-  private implicit def toPythonMatrix[C <: List[List[Int]]](collection: C): py.Any = collection.toPythonProxy
+  private implicit def toPythonCollection[K: Reader: Writer](collection: List[K]): py.Any = collection.toPythonProxy
+  private implicit def toPythonCollectionNested[K: Reader: Writer](collection: List[List[K]]): py.Any = collection.toPythonProxy
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
     val infrastructuralNodes = nodes
