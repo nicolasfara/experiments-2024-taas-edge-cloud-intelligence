@@ -17,6 +17,16 @@ network-model:
   type: ConnectWithinDistance
   parameters: [1.2]
 
+environment:
+  type: Continuous2DEnvironment
+  parameters: [ ]
+  global-programs:
+    - time-distribution:
+        type: Trigger
+        parameters: [0.1]
+      type: GraphBuilderReaction
+      parameters: [*seed]
+
 deployments:
   type: Grid
   parameters: [ -5, -5, 5, 5, *spacing, *spacing, *error, *error ]
@@ -26,3 +36,7 @@ deployments:
         parameters: [ -6, -6, 2, 2 ]
       molecule: infrastructural
       concentration: true
+
+terminate:
+  type: AfterTime
+  parameters: 1.0
