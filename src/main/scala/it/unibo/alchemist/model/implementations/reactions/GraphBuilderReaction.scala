@@ -6,7 +6,6 @@ import scala.jdk.CollectionConverters.CollectionHasAsScala
 import it.unibo.alchemist.model.molecules.SimpleMolecule
 import it.unibo.alchemist.utils.PythonModules.{rlUtils, torch}
 import it.unibo.alchemist.utils.Molecules
-
 import scala.language.implicitConversions
 import me.shadaj.scalapy.py.SeqConverters
 import me.shadaj.scalapy.py
@@ -21,6 +20,8 @@ class GraphBuilderReaction[T, P <: Position[P]](
 ) extends AbstractGlobalReaction(environment, distribution) {
 
   private implicit def toMolecule(name: String): SimpleMolecule = new SimpleMolecule(name)
+  private implicit def toPythonList[C <: List[Int]](collection: C): py.Any = collection.toPythonProxy
+  private implicit def toPythonMatrix[C <: List[List[Int]]](collection: C): py.Any = collection.toPythonProxy
 
   override protected def executeBeforeUpdateDistribution(): Unit = {
     val infrastructuralNodes = nodes
@@ -47,12 +48,14 @@ class GraphBuilderReaction[T, P <: Position[P]](
   }
 
   private def toTorchTensor(data: Tensor): py.Dynamic = data match {
-    case v: Vector => torch.Tensor(v.data, dtype = torch.Long)
-    case m: Matrix => m.data
-      .map { case (self, neighs) => List(List.fill(neighs.length)(self), neighs) }
-      .map { m => torch.Tensor(m, dtype = torch.Long) }
-      .takeRight(m.data.length - 1)
-      .foldLeft(torch.Tensor(m.data.head, dtype = torch.long))((elem, acc) => torch.cat(List(acc, elem), dim = 1))
+    case v: Vector => torch.Tensor(v.data, dtype = torch.long)
+    case m: Matrix =>
+      val tensors = m.data
+        .map { case (self, neighs) => List(List.fill(neighs.length)(self), neighs) }
+        .map { m => torch.tensor(m, dtype = torch.long) }
+      tensors
+        .tail
+        .foldLeft(torch.tensor(tensors.head, dtype = torch.long))((elem, acc) => torch.cat((acc, elem), dim = 1))
   }
 
   private def getNeighbors(n: Node[T]): List[Int] = {
