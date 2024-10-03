@@ -19,7 +19,10 @@ class ModularizationRuntime[T, P <: Position[P]](
   override def cloneAction(node: Node[T], reaction: Reaction[T]): Action[T] = ???
 
   override def execute(): Unit = {
-    val surrogate = environment.getNodes.iterator().asScala.find(_.contains(infrastructuralMolecule))
+    val surrogate = environment.getNodes
+      .iterator()
+      .asScala
+      .find(_.contains(infrastructuralMolecule))
       .getOrElse(throw new IllegalStateException("No surrogate found"))
     allocator.setComponentsAllocation(
       Map("it.unibo.alchemist.Gradient" -> surrogate.getId),

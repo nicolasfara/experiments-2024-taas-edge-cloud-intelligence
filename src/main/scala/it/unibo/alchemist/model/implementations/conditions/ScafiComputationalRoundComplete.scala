@@ -8,7 +8,7 @@ import it.unibo.alchemist.model.implementations.nodes.ScafiDevice
 class ScafiComputationalRoundComplete[T, P <: Position[P], Program <: RunScafiProgram[T, P]](
     val device: ScafiDevice[T],
     val program: RunScafiProgram[T, P],
-    val clazz: Class[Program]
+    val clazz: Class[Program],
 ) extends AbstractCondition(device.getNode) {
   declareDependencyOn(program.asMolecule)
 
@@ -24,10 +24,10 @@ class ScafiComputationalRoundComplete[T, P <: Position[P], Program <: RunScafiPr
           new ScafiComputationalRoundComplete(device, possibleRefs.head, clazz)
         } else {
           throw new IllegalStateException(
-            "There must be one and one only unconfigured " + classOf[Nothing].getSimpleName
+            "There must be one and one only unconfigured " + classOf[Nothing].getSimpleName,
           )
         }
-      }
+      },
     )
   }
 

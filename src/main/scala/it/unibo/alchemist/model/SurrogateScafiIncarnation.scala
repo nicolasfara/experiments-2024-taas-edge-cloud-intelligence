@@ -125,7 +125,7 @@ class SurrogateScafiIncarnation[T, P <: Position[P]] extends Incarnation[T, P] {
     node,
     message = s"The node must have a ${classOf[ScafiDevice[_]].getSimpleName} property",
     device => {
-      val programClazz =  classOf[RunScafiProgram[T, P]]
+      val programClazz = classOf[RunScafiProgram[T, P]]
       val alreadyDone = SurrogateScafiIncarnation
         .allConditionsFor(node, classOf[ScafiComputationalRoundComplete[T, P, _]])
         .map(_.asInstanceOf[ScafiComputationalRoundComplete[T, P, _]])

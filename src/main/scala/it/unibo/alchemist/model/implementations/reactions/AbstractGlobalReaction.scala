@@ -6,9 +6,9 @@ import org.danilopianini.util.{ListSet, ListSets}
 import java.util
 
 abstract class AbstractGlobalReaction[T, P <: Position[P]](
-  val environment: Environment[T, P],
-  distribution: TimeDistribution[T]
-) extends GlobalReaction[T]{
+    val environment: Environment[T, P],
+    distribution: TimeDistribution[T],
+) extends GlobalReaction[T] {
 
   private val actions: util.List[Action[T]] = util.List.of()
   private val conditions: util.List[Condition[T]] = util.List.of()

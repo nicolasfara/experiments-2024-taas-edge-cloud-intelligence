@@ -1,6 +1,6 @@
+import org.apache.tools.ant.taskdefs.condition.Os
 import java.awt.GraphicsEnvironment
 import java.io.ByteArrayOutputStream
-import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
     application
@@ -158,7 +158,7 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
                 "--override",
                 "launcher: { parameters: { batch: [], autoStart: false } }",
                 "--verbosity",
-                "error"
+                "error",
             )
         }
         runAllGraphic.dependsOn(graphic)

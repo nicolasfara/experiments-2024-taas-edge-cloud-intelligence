@@ -16,7 +16,7 @@ import it.unibo.alchemist.model.scafi.ScafiIncarnationForAlchemist.{
   LSNS_ALCHEMIST_RANDOM,
   LSNS_ALCHEMIST_TIMESTAMP,
   NBR_ALCHEMIST_DELAY,
-  NBR_ALCHEMIST_LAG
+  NBR_ALCHEMIST_LAG,
 }
 import it.unibo.alchemist.model.{Action, Environment, Node, Position, Time => AlchemistTime}
 import it.unibo.alchemist.scala.PimpMyAlchemist._
@@ -59,7 +59,7 @@ object AlchemistScafiUtils {
       node: Node[T],
       neighborhoodManager: Map[ID, NeighborData[P]],
       nodeManager: SimpleNodeManager[T],
-      randomGenerator: RandomGenerator
+      randomGenerator: RandomGenerator,
   ): CONTEXT = new ContextImpl(node.getId, exports, localSensors, Map.empty) {
     override def nbrSense[TT](nsns: CNAME)(nbr: ID): Option[TT] =
       neighborhoodSensors
@@ -68,7 +68,7 @@ object AlchemistScafiUtils {
           nsns match {
             case commonNames.NBR_LAG =>
               neighborhoodManager.mapValuesStrict[FiniteDuration](nbr =>
-                FiniteDuration(alchemistTimeToNanos(alchemistCurrentTime - nbr.executionTime), TimeUnit.NANOSECONDS)
+                FiniteDuration(alchemistTimeToNanos(alchemistCurrentTime - nbr.executionTime), TimeUnit.NANOSECONDS),
               )
             /*
              * nbrDelay is estimated: it should be nbr(deltaTime), here we suppose the round frequency
@@ -78,8 +78,8 @@ object AlchemistScafiUtils {
               neighborhoodManager.mapValuesStrict[FiniteDuration](nbr =>
                 FiniteDuration(
                   alchemistTimeToNanos(nbr.executionTime) + deltaTime - currentTime,
-                  TimeUnit.NANOSECONDS
-                )
+                  TimeUnit.NANOSECONDS,
+                ),
               )
             case commonNames.NBR_RANGE => neighborhoodManager.mapValuesStrict[Double](_.position.distanceTo(position))
             case commonNames.NBR_VECTOR =>
@@ -88,7 +88,7 @@ object AlchemistScafiUtils {
               neighborhoodManager.mapValuesStrict[Double](alchemistCurrentTime - _.executionTime)
             case NBR_ALCHEMIST_DELAY =>
               neighborhoodManager.mapValuesStrict(nbr => alchemistTimeToNanos(nbr.executionTime) + deltaTime - currentTime)
-          }
+          },
         )
         .get(nbr)
         .map(_.asInstanceOf[TT])
@@ -102,8 +102,8 @@ object AlchemistScafiUtils {
           Point3D(
             position.getCoordinate(0),
             if (k >= 2) position.getCoordinate(1) else 0,
-            if (k >= 3) position.getCoordinate(2) else 0
-          )
+            if (k >= 3) position.getCoordinate(2) else 0,
+          ),
         )
       case commonNames.LSNS_TIMESTAMP  => Some(currentTime)
       case commonNames.LSNS_TIME       => Some(java.time.Instant.ofEpochMilli((alchemistCurrentTime * 1000).toLong))
@@ -111,8 +111,8 @@ object AlchemistScafiUtils {
       case LSNS_ALCHEMIST_DELTA_TIME =>
         Some(
           alchemistCurrentTime.minus(
-            neighborhoodManager.get(node.getId).map(_.executionTime).getOrElse(AlchemistTime.INFINITY)
-          )
+            neighborhoodManager.get(node.getId).map(_.executionTime).getOrElse(AlchemistTime.INFINITY),
+          ),
         )
       case LSNS_ALCHEMIST_ENVIRONMENT => Some(environment)
       case LSNS_ALCHEMIST_RANDOM      => Some(randomGenerator)

@@ -17,8 +17,8 @@ case class Vector(data: List[Int]) extends Tensor
 case class Matrix(data: List[(Int, List[Int])]) extends Tensor
 
 class GraphBuilderReaction[T, P <: Position[P]](
-  environment: Environment[T, P],
-  distribution: TimeDistribution[T]
+    environment: Environment[T, P],
+    distribution: TimeDistribution[T],
 ) extends AbstractGlobalReaction(environment, distribution) {
 
   private implicit def toMolecule(name: String): SimpleMolecule = new SimpleMolecule(name)
@@ -55,8 +55,7 @@ class GraphBuilderReaction[T, P <: Position[P]](
       val tensors = m.data
         .map { case (self, neighs) => List(List.fill(neighs.length)(self), neighs) }
         .map { m => torch.tensor(m, dtype = torch.long) }
-      tensors
-        .tail
+      tensors.tail
         .foldLeft(torch.tensor(tensors.head, dtype = torch.long))((elem, acc) => torch.cat((acc, elem), dim = 1))
   }
 
